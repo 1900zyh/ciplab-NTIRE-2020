@@ -3,9 +3,10 @@
 import torch
 from torch.autograd import Variable
 
+import os 
+import sys
 from os import mkdir
 from os.path import isfile, isdir
-
 from PIL import Image
 import numpy as np
 import glob
@@ -16,6 +17,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Test model')
 parser.add_argument('-n', type=int, default=2, help='Divisor, make larger when GPU memory shortage')
+parser.add_argument('-p', '--path', type=str, required=True)
 args = parser.parse_args()
 
 
@@ -36,8 +38,11 @@ if not isdir('./output'):
 with torch.no_grad():
 
     # Input images
-    files = glob.glob('./input/*.png')
+    files = glob.glob(f'{args.path}/*.png')
     files.sort()
+    dirname = os.path.dirname(args.path).split("/")
+    output_path = os.path.join("output", dirname[3], dirname[-1])
+    os.makedirs(output_path, exist_ok=True)
 
     for fn in tqdm(files):
         # Load images
@@ -101,6 +106,6 @@ with torch.no_grad():
         batch_output = np.concatenate(hs, 0)
 
         # Save to file
-        Image.fromarray(np.around(batch_output*255).astype(np.uint8)).save('./output/{}.png'.format(fn.split('/')[-1][:-4]))
+        Image.fromarray(np.around(batch_output*255).astype(np.uint8)).save(os.path.join(output_path, os.path.basename(fn)))
 
 

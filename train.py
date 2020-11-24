@@ -32,7 +32,7 @@ START_ITER = 0      # Set 0 for from scratch, else will load saved params and tr
 NB_ITER_MSE = 75000 # MSE pretraining iteration, after that the full loss works
 NB_ITER = 150000    # Total number of training iterations
 
-I_DISPLAY = 100     # display info every N iteration
+I_DISPLAY = 1#100     # display info every N iteration
 I_VALIDATION = 100  # validate every N iteration
 I_SAVE = 1000       # save models every N iteration
 
@@ -180,8 +180,8 @@ class UnetD(torch.nn.Module):
             classname = m.__class__.__name__
             if classname.lower().find('conv') != -1:
                 # print(classname)
-                nn.init.kaiming_normal(m.weight)
-                nn.init.constant(m.bias, 0)
+                nn.init.kaiming_normal_(m.weight)
+                nn.init.constant_(m.bias, 0)
             elif classname.find('bn') != -1:
                 m.weight.data.normal_(1.0, 0.02)
                 m.bias.data.fill_(0)
