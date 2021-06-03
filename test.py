@@ -16,7 +16,8 @@ import argparse
 
 
 parser = argparse.ArgumentParser(description='Test model')
-parser.add_argument('-n', type=int, default=2, help='Divisor, make larger when GPU memory shortage')
+parser.add_argument('-n', type=int, default=1, 
+        help='Divisor, make larger when GPU memory shortage')
 parser.add_argument('-p', '--path', type=str, required=True)
 args = parser.parse_args()
 
@@ -41,7 +42,7 @@ with torch.no_grad():
     files = glob.glob(f'{args.path}/*.png')
     files.sort()
     dirname = os.path.dirname(args.path).split("/")
-    output_path = os.path.join("output", dirname[3], dirname[-1])
+    output_path = os.path.join("output", dirname[-3], dirname[-1])
     os.makedirs(output_path, exist_ok=True)
 
     for fn in tqdm(files):
